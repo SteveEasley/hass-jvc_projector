@@ -4,9 +4,9 @@
   "integration_type": "device",
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/jvc_projector",
-  "requirements": ["git+https://github.com/SteveEasley/pyjvcprojector.git@main#pyjvcprojector==1.0.9"],
+  "requirements": ["git+https://github.com/SteveEasley/pyjvcprojector.git@main#pyjvcprojector==1.0.10"],
   "codeowners": ["@SteveEasley"],
   "iot_class": "local_polling",
   "loggers": ["jvcprojector"],
-  "version": "1.0.7"
+  "version": "1.0.8"
 }

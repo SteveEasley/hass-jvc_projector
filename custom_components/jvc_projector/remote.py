@@ -11,7 +11,7 @@ from homeassistant.components.remote import RemoteEntity
 from homeassistant.core import callback
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import DOMAIN as JVC_DOMAIN, POWER_ON, POWER_WARMING
+from .const import DOMAIN as JVC_DOMAIN
 from .entity import JvcProjectorEntity
 
 if TYPE_CHECKING:
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-ON_STATES = [POWER_ON, POWER_WARMING]
+ON_STATES = [const.ON, const.WARMING]
 
 COMMANDS = {
     "menu": const.REMOTE_MENU,
@@ -79,7 +79,6 @@ class JvcProjectorRemote(JvcProjectorEntity, RemoteEntity):
             if cmd not in COMMANDS:
                 raise HomeAssistantError(f"{cmd} is not a known command")
             await self.device.remote(COMMANDS[cmd])
-        await self._refresh_state()
 
     @callback
     def _handle_coordinator_update(self) -> None:

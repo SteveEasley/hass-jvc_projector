@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from jvcprojector import JvcProjector, JvcProjectorAuthError, JvcProjectorConnectError
 
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, Platform
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, Platform, EVENT_HOMEASSISTANT_STOP
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 
 from .const import DOMAIN
@@ -41,6 +41,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
+    async def disconnect(event: Event) -> None:
+        await device.disconnect()
+
+    entry.async_on_unload(
+        hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, disconnect)
+    )
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
@@ -49,6 +56,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        await hass.data[DOMAIN][entry.entry_id].device.disconnect()
         hass.data[DOMAIN].pop(entry.entry_id)
     return unload_ok
 
@@ -56,5 +64,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def get_mac_address(host: str, port: int, password: str | None) -> str:
     """Get device mac address for config flow."""
     device = JvcProjector(host, port=port, password=password)
-    await device.connect(True)
+    try:
+        await device.connect(True)
+    finally:
+        await device.disconnect()
     return device.mac

@@ -26,10 +26,10 @@ ON_STATES = [POWER_ON, POWER_WARMING]
 
 COMMANDS = {
     "menu": const.REMOTE_MENU,
-    "up": const.REMOTE_MENU_UP,
-    "down": const.REMOTE_MENU_DOWN,
-    "left": const.REMOTE_MENU_LEFT,
-    "right": const.REMOTE_MENU_RIGHT,
+    "up": const.REMOTE_UP,
+    "down": const.REMOTE_DOWN,
+    "left": const.REMOTE_LEFT,
+    "right": const.REMOTE_RIGHT,
     "ok": const.REMOTE_OK,
     "back": const.REMOTE_BACK,
     "mpc": const.REMOTE_MPC,

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from typing import TYPE_CHECKING
 
 from jvcprojector import const
@@ -22,7 +23,6 @@ if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-ON_STATES = [const.ON, const.WARMING]
 
 COMMANDS = {
     "menu": const.REMOTE_MENU,
@@ -45,6 +45,8 @@ COMMANDS = {
     "gamma_settings": const.REMOTE_GAMMA_SETTINGS,
 }
 
+_LOGGER = logging.getLogger(__name__)
+
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
@@ -58,30 +60,28 @@ async def async_setup_entry(
 class JvcProjectorRemote(JvcProjectorEntity, RemoteEntity):
     """Representation of a JVC Projector device."""
 
-    async def _refresh_state(self) -> None:
-        """Force refresh device state."""
-        await asyncio.sleep(1)
-        await self.coordinator.async_refresh()
-
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the device on."""
         await self.device.power_on()
-        await self._refresh_state()
+        await asyncio.sleep(1)
+        await self.coordinator.async_refresh()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the device off."""
         await self.device.power_off()
-        await self._refresh_state()
+        await asyncio.sleep(1)
+        await self.coordinator.async_refresh()
 
     async def async_send_command(self, command: Iterable[str], **kwargs: Any) -> None:
         """Send a remote command to the device."""
         for cmd in command:
             if cmd not in COMMANDS:
                 raise HomeAssistantError(f"{cmd} is not a known command")
+            _LOGGER.debug("Sending command '%s'", cmd)
             await self.device.remote(COMMANDS[cmd])
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        self._attr_is_on = self.coordinator.data["power"] in ON_STATES
+        self._attr_is_on = self.coordinator.data["power"] in [const.ON, const.WARMING]
         super()._handle_coordinator_update()

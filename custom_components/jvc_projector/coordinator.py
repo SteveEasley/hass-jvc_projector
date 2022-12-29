@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(__name__)
 
-INTERVAL_SLOW = timedelta(seconds=60)
-INTERVAL_FAST = timedelta(seconds=10)
+INTERVAL_SLOW = timedelta(seconds=90)
+INTERVAL_FAST = timedelta(seconds=5)
 
 
 class JvcProjectorDataUpdateCoordinator(DataUpdateCoordinator):
@@ -49,9 +49,14 @@ class JvcProjectorDataUpdateCoordinator(DataUpdateCoordinator):
         except JvcProjectorAuthError as err:
             raise ConfigEntryAuthFailed("Password authentication failed") from err
 
-        if state[const.POWER] == const.STANDBY:
-            self.update_interval = INTERVAL_SLOW
-        else:
+        old_interval = self.update_interval
+
+        if state[const.POWER] != const.STANDBY:
             self.update_interval = INTERVAL_FAST
+        else:
+            self.update_interval = INTERVAL_SLOW
+
+        if self.update_interval != old_interval:
+            _LOGGER.debug("Changed update interval to %s", self.update_interval)
 
         return state

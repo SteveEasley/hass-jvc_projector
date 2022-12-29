@@ -8,5 +8,5 @@
   "codeowners": ["@SteveEasley"],
   "iot_class": "local_polling",
   "loggers": ["jvcprojector"],
-  "version": "1.0.8"
+  "version": "1.0.10"
 }

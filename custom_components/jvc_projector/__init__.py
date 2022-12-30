@@ -36,10 +36,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         await device.connect(True)
     except JvcProjectorConnectError as err:
+        await device.disconnect()
         raise ConfigEntryNotReady(
             f"Unable to connect to {entry.data[CONF_HOST]}"
         ) from err
     except JvcProjectorAuthError as err:
+        await device.disconnect()
         raise ConfigEntryAuthFailed("Password authentication failed") from err
 
     coordinator = JvcProjectorDataUpdateCoordinator(hass, device)

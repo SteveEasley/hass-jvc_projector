@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 INTERVAL_SLOW = timedelta(seconds=90)
-INTERVAL_FAST = timedelta(seconds=5)
+INTERVAL_FAST = timedelta(seconds=6)
 
 
 class JvcProjectorDataUpdateCoordinator(DataUpdateCoordinator):

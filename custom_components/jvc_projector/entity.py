@@ -3,20 +3,14 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+
+from jvcprojector import JvcProjector
 
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import (
-    DOMAIN as JVC_DOMAIN,
-    MANUFACTURER as JVC_MANUFACTURER,
-    NAME as JVC_NAME,
-)
+from .const import DOMAIN, MANUFACTURER, NAME
 from .coordinator import JvcProjectorDataUpdateCoordinator
-
-if TYPE_CHECKING:
-    from jvcprojector import JvcProjector
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,12 +23,12 @@ class JvcProjectorEntity(CoordinatorEntity[JvcProjectorDataUpdateCoordinator]):
         super().__init__(coordinator)
 
         self._attr_unique_id = coordinator.unique_id
-        self._attr_name = JVC_NAME
+        self._attr_name = NAME
         self._attr_device_info = DeviceInfo(
-            identifiers={(JVC_DOMAIN, coordinator.unique_id)},
+            identifiers={(DOMAIN, coordinator.unique_id)},
             name=self.name,
             model=self.device.model,
-            manufacturer=JVC_MANUFACTURER,
+            manufacturer=MANUFACTURER,
             suggested_area="Theater",
         )
 

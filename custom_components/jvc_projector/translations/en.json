@@ -26,9 +26,9 @@
                     "port": "Port"
                 },
                 "data_description": {
-                    "host": "IP address or hostname of projector.",
-                    "password": "Optional password if projector is configured for one.",
-                    "port": "IP port of projector. Default is 20554"
+                    "host": "IP address or hostname of projector",
+                    "password": "Optional password if projector is configured for one",
+                    "port": "IP port of projector (default is 20554)"
                 }
             }
         }

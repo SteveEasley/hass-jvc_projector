@@ -9,9 +9,9 @@
           "password": "[%key:common::config_flow::data::password%]"
         },
         "data_description": {
-          "host": "IP address or hostname of projector.",
-          "port": "IP port of projector. Default is 20554",
-          "password": "Optional password if projector is configured for one."
+          "host": "IP address or hostname of projector",
+          "port": "IP port of projector (default is 20554)",
+          "password": "Optional password if projector is configured for one"
         }
       },
       "reauth_confirm": {

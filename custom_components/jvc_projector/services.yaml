@@ -1,0 +1,15 @@
+send_command:
+  name: Send Command
+  description: Send a raw operation command
+  target:
+    entity:
+      integration: jvc_projector
+      domain: remote
+  fields:
+    command:
+      name: Command
+      description: Command to send. See integration documentation for format.
+      required: true
+      example: PMPM03
+      selector:
+        text:
